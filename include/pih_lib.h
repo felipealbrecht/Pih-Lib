@@ -118,4 +118,7 @@ int compare_strings (const void *va, const void *vb);
 
 int destroy_string(void *s);
 
+
+size_t combination(size_t l_n, size_t l_k);
+
 #endif

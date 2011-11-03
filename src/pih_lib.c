@@ -1109,7 +1109,6 @@ int hash_table_destroy_all(hash_table_t *hash_table, int (*destroy_item)(void *)
 	list = (*hash_table)->keys;
 	list_destroy_all(&list, destroy_item);
 
-	fprintf(stderr, "destruindo %p\n", *hash_table);
 	free(*hash_table);
 	*hash_table = NULL;
 
@@ -1205,3 +1204,18 @@ int destroy_string(void *s)
 	*string = NULL;
 	return 1;
 }
+
+
+size_t combination(size_t l_n, size_t l_k)
+{
+	double n = (double) l_n;
+	double k = (double) l_k;
+	double sub_total = n / k;
+
+	while ((--k > 0) && (--n > 0)) {
+		sub_total*=(n/k);
+	}
+
+	return (size_t) sub_total;
+}
+
