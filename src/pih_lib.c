@@ -333,7 +333,6 @@ void list_destroy_all(list_t *list, int (*destroy_item)(void *))
 	while (cell != NULL) {
 		cell_delete = cell;
 		data = cell_delete->data;
-
 		destroy_item(&data);
 
 		cell = cell->next;
@@ -1061,6 +1060,8 @@ hash_table_t hash_table_clone_all(hash_table_t hash_table, void* (*clone_item)(v
 		hash_table_add(hash_table_clone, cell->id, clone_item(cell->data));
 	}
 
+        list_iterator_destroy(&iterator);
+
 	return hash_table_clone;
 }
 
@@ -1168,8 +1169,13 @@ char *string_buffer_to_string(string_buffer_t sb)
 		cell = iterator->next(iterator);
 		text = cell->data;
 		string = strcat(string, text);
+                free(text);
 	}
+
 	list_iterator_destroy(&iterator);
+        list_destroy(&(sb->strings));
+        free(sb);
+
 	return string;
 }
 
