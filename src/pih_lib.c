@@ -890,6 +890,7 @@ void* hash_table_add(hash_table_t hash_table, char *id, void *data)
 	assert(hash_table != NULL);
 	assert(id != NULL);
 
+
 	unsigned int pos = __hash_value(hash_table, id);
 
 	// Se a celula na tabelas estiver vazia, adiciona na tebela e adiciona a chave
@@ -985,7 +986,12 @@ void hash_table_print(hash_table_t hash_table, void (*print_func)(char *, void *
 	if (hash_table == NULL) {
 		fprintf(stderr, "(null)");
 	}
-	list_print(hash_table->keys, print_func);
+        size_t i;
+        for (i = 0; i < hash_table->size; i++) {
+            if (hash_table->elems[i] != NULL) {
+        	list_print(hash_table->elems[i], print_func);
+            }
+        }
 }
 
 void* hash_table_get(hash_table_t hash_table, char *id)
