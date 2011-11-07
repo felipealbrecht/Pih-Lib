@@ -530,7 +530,6 @@ list_t list_sort_by_data(const list_t list, int (*comparer)(const void *, const 
 
 /**
  * Return a NEW list sorted
- * TODO: return the SAME list, but sorted.
  */
 static list_t __list_sort(const list_t list, int (*comparer)(const void *, const void *),  void* (*getter)(cell_t))
 {
@@ -551,7 +550,9 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 
 	cell = list->first;
 	for (i = 0; (size_t) i < list->size; i++) {
-		cells[i] = cell;
+		cells[i] = (cell_t) malloc(sizeof(struct __cell));
+                cells[i]->data = cell->data;
+                cells[i]->id = cell->id;
 		cell = cell->next;
 	}
 
@@ -985,13 +986,22 @@ void hash_table_print(hash_table_t hash_table, void (*print_func)(char *, void *
 	assert(print_func != NULL);
 	if (hash_table == NULL) {
 		fprintf(stderr, "(null)");
-	}
-        size_t i;
-        for (i = 0; i < hash_table->size; i++) {
-            if (hash_table->elems[i] != NULL) {
-        	list_print(hash_table->elems[i], print_func);
-            }
+                return;
         }
+	
+	cell_t cell = NULL;
+	
+	iterator_t iterator = NULL;
+        iterator = list_iterator(hash_table->keys);
+
+	while (iterator->has_next(iterator)) {
+		cell = iterator->next(iterator);
+                print_func(cell->id, cell->data);
+        }
+
+
+	list_iterator_destroy(&iterator);
+
 }
 
 void* hash_table_get(hash_table_t hash_table, char *id)
@@ -1108,7 +1118,7 @@ int hash_table_destroy_all(hash_table_t *hash_table, int (*destroy_item)(void *)
 		list = (*hash_table)->elems[i];
 		total++;
 		if (list != NULL) {
-			list_destroy(&list);
+		    list_destroy(&list);
 		}
 	}
 	free((*hash_table)->elems);
