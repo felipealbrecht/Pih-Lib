@@ -1,7 +1,7 @@
 /***************************************************************************
 * pih_lib.c
 * (C) 2006 Felipe Albrecht (felipe.albrecht@gmail.com)
- 
+
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
@@ -15,10 +15,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- 
+
 # pih_lib.c:
 # A group of usefull functions
- 
+
 ****************************************************************/
 
 #include <assert.h>
@@ -35,6 +35,8 @@
 
 #define MAX_STRING_LEN 256
 
+#define ID_STRING_LEN 32
+
 #define LIST_SIZE(l) (l==NULL?0:l->size)
 
 #define HAS_NEXT(it) (it->has_next(it))
@@ -47,16 +49,6 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 static char *name = NULL;
 static out_level_t actual_level = OUT_NORMAL;
 
-void setprogname(char *str)
-{
-	name = str;
-}
-
-char *progname()
-{
-	return name;
-}
-
 void setlevel(out_level_t level)
 {
 	actual_level = level;
@@ -68,9 +60,6 @@ void print_message(out_level_t show_level, char *fmt, ...)
 
 	if (show_level <= actual_level) {
 		fflush(stdout);
-		if (progname() != NULL) {
-			fprintf(stdout, "%s: ", progname());
-		}
 
 		va_start(args, fmt);
 		vfprintf(stdout, fmt, args);
@@ -93,6 +82,17 @@ int max_length(char *s1, char *s2)
 	} else {
 		return len_s2;
 	}
+}
+
+char *ptr_to_string(void *ptr)
+{
+   char *s = malloc(sizeof(char) * ID_STRING_LEN);
+   memset(s, '\0', sizeof(char) * ID_STRING_LEN);
+   assert(s != NULL);
+
+   sprintf(s, "%p", ptr);
+
+   return s;
 }
 
 inline int min_length(char *s1, char *s2)
@@ -136,7 +136,7 @@ static cell_t __cell_clone(cell_t cell)
 	}
 
 	cell_clone = __cell_create();
-	cell_clone->id = cell->id;
+	cell_clone->id = strdup(cell->id);
 	cell_clone->data = cell->data;
 	cell_clone->next = cell->next;
 
@@ -165,7 +165,7 @@ void* list_add(const list_t list, char *id, void *data)
 	assert(id != NULL);
 
 	cell_t cell = __cell_create();
-	cell->id = id;
+	cell->id = strdup(id);
 	cell->data = data;
 	cell->next = NULL;
 
@@ -201,7 +201,7 @@ void* list_remove_by_id(list_t list, const char *id)
 	}
 
 	while (cell != NULL) {
-		if (( (void *) id ==  (void *) cell) || (strcmp(cell->id, id) == 0)) {
+		if (strcmp(cell->id, id) == 0) {
 			data = cell->data;
 			if (prev == NULL) { // first node
 				list->first = cell->next;
@@ -209,6 +209,7 @@ void* list_remove_by_id(list_t list, const char *id)
 				prev->next = cell->next;
 			}
 			list->size--;
+                        free(cell->id);
 			free(cell);
 			return data;
 		}
@@ -354,7 +355,7 @@ void* list_push(const list_t list, char *id, void *data)
 	assert(id != NULL);
 
 	cell_t cell = __cell_create();
-	cell->id = id;
+	cell->id = strdup(id);
 	cell->data = data;
 	cell->next = list->first;
 
@@ -486,6 +487,7 @@ cell_t list_search(const list_t list, const char *id)
 
 		if (strcmp(cell->id, id) == 0) {
 			list_iterator_destroy(&it);
+                        fprintf(stderr, "aaa");
 			return cell;
 		}
 	}
@@ -1223,5 +1225,57 @@ size_t combination(size_t l_n, size_t l_k)
 	}
 
 	return (size_t) sub_total;
+}
+
+shared_ptr_t shared_ptr_create(void *data, void* ref)
+{
+
+   shared_ptr_t shared_ptr;
+
+   shared_ptr = (shared_ptr_t) malloc(sizeof(struct __shared_ptr));
+   memset(shared_ptr, '\0', sizeof(struct __shared_ptr));
+   assert(shared_ptr != NULL);
+
+   shared_ptr->refs = list_create();
+
+   shared_ptr_inc_ref(shared_ptr, ref);
+
+   return shared_ptr;
+}
+
+
+void shared_ptr_inc_ref(shared_ptr_t shared_ptr, void *ref)
+{
+   assert (shared_ptr != NULL);
+
+   if (list_search(shared_ptr->refs, ref) == NULL) {
+      char *s = ptr_to_string(ref);
+      list_push(shared_ptr->refs, s, ref);
+      free(s);
+   }
+}
+
+void shared_ptr_rem_ref(shared_ptr_t *shared_ptr, void *ref)
+{
+   assert (shared_ptr != NULL);
+
+   char *s = ptr_to_string(ref);
+   list_remove_by_id((*shared_ptr)->refs, s);
+   free(s);
+
+   if ((*shared_ptr)->refs->size == 0) {
+      print_message(OUT_DEBUG, "Shared ptr %d does not have more references. Destroying.\n", shared_ptr);
+      shared_ptr_destroy(shared_ptr);
+   }
+}
+
+void shared_ptr_destroy(shared_ptr_t *shared_ptr)
+{
+   assert (shared_ptr != NULL);
+
+   list_destroy(&(*shared_ptr)->refs);
+   free((*shared_ptr)->ptr);
+   free(*shared_ptr);
+   *shared_ptr = NULL;
 }
 

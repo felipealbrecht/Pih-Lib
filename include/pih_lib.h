@@ -15,6 +15,7 @@ typedef struct __list *list_t;
 typedef struct __hash_table *hash_table_t;
 typedef struct __iterator *iterator_t;
 typedef struct __string_buffer *string_buffer_t;
+typedef struct __shared_ptr *shared_ptr_t;
 
 struct __list
 {
@@ -53,10 +54,14 @@ struct __string_buffer
 	int total_length;
 };
 
+struct __shared_ptr
+{
+      list_t refs;
+      void *ptr;
+};
 
-void setprogname(char *str);
+
 void setlevel(out_level_t level);
-char *progname();
 void print_message(out_level_t show_level, char *fmt, ...);
 
 int min_length(char *s1, char *s2);
@@ -112,13 +117,16 @@ char *string_buffer_to_string(string_buffer_t sb);
 void print_dummy(char *id, void* data);
 void print_data_char(char *id, void* data);
 
-
 int compare_doubles (const double *da, const double *db);
 int compare_strings (const void *va, const void *vb);
 
 int destroy_string(void *s);
 
-
 size_t combination(size_t l_n, size_t l_k);
+
+shared_ptr_t shared_ptr_create(void *data, void* ref);
+void shared_ptr_inc_ref(shared_ptr_t shared_ptr, void *ref);
+void shared_ptr_rem_ref(shared_ptr_t *shared_ptr, void *ref);
+void shared_ptr_destroy(shared_ptr_t *shared_ptr);
 
 #endif
