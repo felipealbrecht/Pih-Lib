@@ -1208,10 +1208,7 @@ int compare_strings (const void *va, const void *vb)
 	assert(va != NULL);
 	assert(vb != NULL);
 
-	int x = strcmp(va, vb);
-        fprintf(stderr, "%d\n", x);
-
-        return x;
+	return strcmp(va, vb);
 }
 
 static inline void* __get_id(cell_t c)
