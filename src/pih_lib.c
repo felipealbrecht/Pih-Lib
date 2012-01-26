@@ -317,6 +317,7 @@ void list_destroy(list_t *list)
 	while (cell != NULL) {
 		cell_delete = cell;
 		cell = cell->next;
+                free(cell_delete->id);
 		free(cell_delete);
 	}
 
@@ -924,7 +925,7 @@ void* hash_table_add(hash_table_t hash_table, char *id, void *data)
 						break;
 					}
 				}
-				assert(keys_cell->id == list_cell->id);
+				assert(strcmp(keys_cell->id, list_cell->id) == 0);
 				assert(keys_cell->data == list_cell->data);
 
 				list_iterator_destroy(&keys_iterator);
@@ -990,9 +991,9 @@ void hash_table_print(hash_table_t hash_table, void (*print_func)(char *, void *
 		fprintf(stderr, "(null)");
                 return;
         }
-	
+
 	cell_t cell = NULL;
-	
+
 	iterator_t iterator = NULL;
         iterator = list_iterator(hash_table->keys);
 
@@ -1207,7 +1208,10 @@ int compare_strings (const void *va, const void *vb)
 	assert(va != NULL);
 	assert(vb != NULL);
 
-	return strcmp(va, vb);
+	int x = strcmp(va, vb);
+        fprintf(stderr, "%d\n", x);
+
+        return x;
 }
 
 static inline void* __get_id(cell_t c)
