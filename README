@@ -1,3 +1,11 @@
 Pih lib.
 
 My very own, simple, and funny C library.
+
+* List
+* Hash table
+* Iterator
+* String buffer
+* Functions to extract directory/files
+
+see the include/pih_lib.h
