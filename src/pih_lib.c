@@ -539,6 +539,8 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 {
 	assert(list != NULL);
 
+        int i;
+
 	cell_t cell;
 	cell_t *cells;   // array of the list cells
 	list_t new_list; // sorted list
@@ -551,7 +553,7 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 	assert(cells != NULL);
 
 	cell = list->first;
-	for (int i = 0; (size_t) i < list->size; i++) {
+	for (i = 0; (size_t) i < list->size; i++) {
 		cells[i] = (cell_t) malloc(sizeof(struct __cell));
         cells[i]->data = cell->data;
         cells[i]->id = strdup(cell->id);
@@ -565,7 +567,7 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 	new_list->first = cells[0];
 
 	cell = new_list->first;
-	for (int i = 1; (size_t) i < list->size; i++) {
+	for (i = 1; (size_t) i < list->size; i++) {
 		cell->next = cells[i];
 		cell = cells[i];
 	}
@@ -667,7 +669,7 @@ char *get_file_from_dir(const char *full_path)
 {
 	assert(full_path != NULL);
 
-    long i; 
+    long i;
     size_t len = strlen(full_path), delta;
 	char *name = NULL;
 
@@ -701,7 +703,7 @@ char *get_directory(const char *full_path)
     char *name = NULL;
 
     size_t len = strlen(full_path);
-	size_t i = len - 1;        
+	size_t i = len - 1;
 
     do {
 		if (full_path[i] == '/') {
