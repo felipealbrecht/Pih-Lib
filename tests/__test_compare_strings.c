@@ -4,7 +4,7 @@
 #include "pih_lib.h"
 
 
-int main()
+int __test_compare_strings()
 {
 	assert( compare_strings("aaaaa", "bbbb") == -1);
 	assert( compare_strings("bbbb", "aaaaa") == 1);

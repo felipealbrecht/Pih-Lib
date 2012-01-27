@@ -3,7 +3,7 @@
 
 #include "pih_lib.h"
 
-int main()
+int __test_sort_list_string()
 {
 
 	list_t un = list_create();

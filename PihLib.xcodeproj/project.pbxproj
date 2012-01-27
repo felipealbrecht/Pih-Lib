@@ -1,0 +1,255 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F05246D014D2D73C00AA046C /* pih_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246CF14D2D73C00AA046C /* pih_lib.c */; };
+		F05246D514D2D7BA00AA046C /* __test_compare_strings.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246D114D2D7BA00AA046C /* __test_compare_strings.c */; };
+		F05246D614D2D7BA00AA046C /* __test_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246D214D2D7BA00AA046C /* __test_hash.c */; };
+		F05246D714D2D7BA00AA046C /* __test_shared_ref.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246D314D2D7BA00AA046C /* __test_shared_ref.c */; };
+		F05246D814D2D7BA00AA046C /* __test_sort_list_string.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246D414D2D7BA00AA046C /* __test_sort_list_string.c */; };
+		F05246DE14D2DAC600AA046C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = F05246DD14D2DAC600AA046C /* main.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F0A413EB14D2D4AB00349488 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F05246CD14D2D72400AA046C /* pih_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pih_lib.h; path = include/pih_lib.h; sourceTree = SOURCE_ROOT; };
+		F05246CF14D2D73C00AA046C /* pih_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pih_lib.c; path = src/pih_lib.c; sourceTree = SOURCE_ROOT; };
+		F05246D114D2D7BA00AA046C /* __test_compare_strings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = __test_compare_strings.c; path = tests/__test_compare_strings.c; sourceTree = SOURCE_ROOT; };
+		F05246D214D2D7BA00AA046C /* __test_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = __test_hash.c; path = tests/__test_hash.c; sourceTree = SOURCE_ROOT; };
+		F05246D314D2D7BA00AA046C /* __test_shared_ref.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = __test_shared_ref.c; path = tests/__test_shared_ref.c; sourceTree = SOURCE_ROOT; };
+		F05246D414D2D7BA00AA046C /* __test_sort_list_string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = __test_sort_list_string.c; path = tests/__test_sort_list_string.c; sourceTree = SOURCE_ROOT; };
+		F05246DA14D2D84600AA046C /* tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tests.h; path = tests/tests.h; sourceTree = SOURCE_ROOT; };
+		F05246DD14D2DAC600AA046C /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = tests/main.c; sourceTree = SOURCE_ROOT; };
+		F05246DF14D2DAD000AA046C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = SOURCE_ROOT; };
+		F0A413ED14D2D4AB00349488 /* PihLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PihLib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F0A413EA14D2D4AB00349488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F05246D914D2D7BF00AA046C /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				F05246DD14D2DAC600AA046C /* main.c */,
+				F05246DA14D2D84600AA046C /* tests.h */,
+				F05246D114D2D7BA00AA046C /* __test_compare_strings.c */,
+				F05246D214D2D7BA00AA046C /* __test_hash.c */,
+				F05246D314D2D7BA00AA046C /* __test_shared_ref.c */,
+				F05246D414D2D7BA00AA046C /* __test_sort_list_string.c */,
+			);
+			name = tests;
+			sourceTree = "<group>";
+		};
+		F05246DB14D2D8BD00AA046C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F05246CD14D2D72400AA046C /* pih_lib.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		F05246DC14D2DA3F00AA046C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F05246CF14D2D73C00AA046C /* pih_lib.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		F0A413E214D2D4AA00349488 = {
+			isa = PBXGroup;
+			children = (
+				F0A413F014D2D4AB00349488 /* PihLib */,
+				F0A413EE14D2D4AB00349488 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F0A413EE14D2D4AB00349488 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F0A413ED14D2D4AB00349488 /* PihLib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F0A413F014D2D4AB00349488 /* PihLib */ = {
+			isa = PBXGroup;
+			children = (
+				F05246DF14D2DAD000AA046C /* README */,
+				F05246DC14D2DA3F00AA046C /* src */,
+				F05246DB14D2D8BD00AA046C /* include */,
+				F05246D914D2D7BF00AA046C /* tests */,
+			);
+			path = PihLib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F0A413EC14D2D4AB00349488 /* PihLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0A413F714D2D4AB00349488 /* Build configuration list for PBXNativeTarget "PihLib" */;
+			buildPhases = (
+				F0A413E914D2D4AB00349488 /* Sources */,
+				F0A413EA14D2D4AB00349488 /* Frameworks */,
+				F0A413EB14D2D4AB00349488 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PihLib;
+			productName = PihLib;
+			productReference = F0A413ED14D2D4AB00349488 /* PihLib */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F0A413E414D2D4AA00349488 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = F0A413E714D2D4AA00349488 /* Build configuration list for PBXProject "PihLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F0A413E214D2D4AA00349488;
+			productRefGroup = F0A413EE14D2D4AB00349488 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F0A413EC14D2D4AB00349488 /* PihLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F0A413E914D2D4AB00349488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F05246D014D2D73C00AA046C /* pih_lib.c in Sources */,
+				F05246D514D2D7BA00AA046C /* __test_compare_strings.c in Sources */,
+				F05246D614D2D7BA00AA046C /* __test_hash.c in Sources */,
+				F05246D714D2D7BA00AA046C /* __test_shared_ref.c in Sources */,
+				F05246D814D2D7BA00AA046C /* __test_sort_list_string.c in Sources */,
+				F05246DE14D2DAC600AA046C /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F0A413F514D2D4AB00349488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F0A413F614D2D4AB00349488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F0A413F814D2D4AB00349488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F0A413F914D2D4AB00349488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F0A413E714D2D4AA00349488 /* Build configuration list for PBXProject "PihLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0A413F514D2D4AB00349488 /* Debug */,
+				F0A413F614D2D4AB00349488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0A413F714D2D4AB00349488 /* Build configuration list for PBXNativeTarget "PihLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0A413F814D2D4AB00349488 /* Debug */,
+				F0A413F914D2D4AB00349488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F0A413E414D2D4AA00349488 /* Project object */;
+}

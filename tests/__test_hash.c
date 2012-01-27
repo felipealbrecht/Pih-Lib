@@ -3,7 +3,7 @@
 
 #include "pih_lib.h"
 
-int main()
+int __test_hash()
 {
 	hash_table_t hash = NULL;
 
