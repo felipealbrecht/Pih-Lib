@@ -13,9 +13,14 @@
 
 int main (int argc, const char * argv[])
 {
-
-    // insert code here...
-    printf("Hello, World!\n");
+    __test_compare_strings();
+    __test_hash();
+    __test_shared_ref();
+    __test_sort_list_string();
+    
+    
+    fprintf(stdout, "All tests passed!\n");
+    
     return 0;
 }
 

@@ -3,11 +3,12 @@
 #include <string.h>
 
 #include "pih_lib.h"
+#include "tests.h"
 
 typedef struct {
 } X;
 
-int __test_shared_ref()
+int __test_shared_ref(void)
 {
     setlevel(OUT_SHOW_ALL);
 
@@ -34,6 +35,8 @@ int __test_shared_ref()
     shared_ptr_rem_ref(&shr, t3);
 
     fprintf(stderr, "shr: %p\n", shr);
+    
+    assert(shr == NULL);
 
     return 0;
 }

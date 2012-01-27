@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #include <dirent.h>
 
@@ -46,7 +47,7 @@ static inline void* __get_id(cell_t c);
 static inline void* __get_data(cell_t c);
 static list_t __list_sort(const list_t list, int (*comparer)(const void *, const void *),  void* (*getter)(cell_t));
 
-static char *name = NULL;
+
 static out_level_t actual_level = OUT_NORMAL;
 
 void setlevel(out_level_t level)
@@ -67,12 +68,12 @@ void print_message(out_level_t show_level, char *fmt, ...)
 	}
 }
 
-int max_length(char *s1, char *s2)
+size_t max_length(char *s1, char *s2)
 {
 	assert(s1 != NULL);
 	assert(s2 != NULL);
 
-	int len_s1, len_s2;
+	size_t len_s1, len_s2;
 
 	len_s1 = strlen(s1);
 	len_s2 = strlen(s2);
@@ -95,12 +96,12 @@ char *ptr_to_string(void *ptr)
    return s;
 }
 
-inline int min_length(char *s1, char *s2)
+inline size_t min_length(char *s1, char *s2)
 {
 	assert(s1 != NULL);
 	assert(s2 != NULL);
 
-	int len_s1, len_s2;
+	size_t len_s1, len_s2;
 
 	len_s1 = strlen(s1);
 	len_s2 = strlen(s2);
@@ -144,7 +145,7 @@ static cell_t __cell_clone(cell_t cell)
 }
 
 
-list_t list_create()
+list_t list_create(void)
 {
 	list_t list;
 
@@ -317,7 +318,7 @@ void list_destroy(list_t *list)
 	while (cell != NULL) {
 		cell_delete = cell;
 		cell = cell->next;
-                free(cell_delete->id);
+        free(cell_delete->id);
 		free(cell_delete);
 	}
 
@@ -325,7 +326,7 @@ void list_destroy(list_t *list)
 	*list = NULL;
 }
 
-void list_destroy_all(list_t *list, int (*destroy_item)(void *))
+void list_destroy_all(list_t *list, size_t (*destroy_item)(void *))
 {
 	cell_t cell = (*list)->first;
 	cell_t cell_delete = NULL;
@@ -386,7 +387,7 @@ cell_t list_pop(const list_t list)
 	return cell;
 }
 
-int __list_has_next(const iterator_t iterator)
+size_t __list_has_next(const iterator_t iterator)
 {
 	if (iterator->list == NULL) {
 		return 0;
@@ -517,7 +518,7 @@ void *list_get_by_pos(const list_t list, const size_t pos)
 		cell = cell->next;
 	}
 
-	return cell->data;
+	return cell->id;
 }
 
 
@@ -538,8 +539,6 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 {
 	assert(list != NULL);
 
-	int j, i;
-	cell_t key;
 	cell_t cell;
 	cell_t *cells;   // array of the list cells
 	list_t new_list; // sorted list
@@ -552,35 +551,27 @@ static list_t __list_sort(const list_t list, int (*comparer)(const void *, const
 	assert(cells != NULL);
 
 	cell = list->first;
-	for (i = 0; (size_t) i < list->size; i++) {
+	for (int i = 0; (size_t) i < list->size; i++) {
 		cells[i] = (cell_t) malloc(sizeof(struct __cell));
-                cells[i]->data = cell->data;
-                cells[i]->id = cell->id;
+        cells[i]->data = cell->data;
+        cells[i]->id = strdup(cell->id);
 		cell = cell->next;
 	}
 
-	for (j = 1; (size_t) j < list->size; j++) {
-		key = cells[j];
-		i = j - 1;
-		while ((i >= 0) && (comparer(getter(cells[i]), getter(key)) > 0)) {
-	        cells[i + 1] = cells[i];
-	        i = i - 1;
-        }
-        cells[i + 1] = key;
-	}
+    qsort(cells, list->size, sizeof(cell_t), comparer);
 
-        new_list = (list_t) malloc(sizeof(struct __list));
+    new_list = (list_t) malloc(sizeof(struct __list));
 	new_list->size = list->size;
 	new_list->first = cells[0];
 
 	cell = new_list->first;
-	for (i = 1; (size_t) i < list->size; i++) {
+	for (int i = 1; (size_t) i < list->size; i++) {
 		cell->next = cells[i];
 		cell = cells[i];
 	}
 
 	cell->next = NULL;
-        free(cells);
+    free(cells);
 
 	return new_list;
 }
@@ -626,7 +617,8 @@ char *get_file_extension(const char *filename)
 	assert(filename != NULL);
 
 	char *actual = NULL;
-	int i, len = strlen(filename);
+	uint32_t i;
+    size_t len = strlen(filename);
 
 	for (i = 0; i < len; i++) {
 		if (filename[i] == '.') {
@@ -648,7 +640,8 @@ char *get_file_name(const char *filename)
 {
 	assert(filename != NULL);
 
-	int i, len = strlen(filename);
+	uint32_t i;
+    size_t len = strlen(filename);
 	char *name = NULL;
 
 	for (i = 0; i < len; i++) {
@@ -674,7 +667,8 @@ char *get_file_from_dir(const char *full_path)
 {
 	assert(full_path != NULL);
 
-	int i, len = strlen(full_path), delta;
+    long i; 
+    size_t len = strlen(full_path), delta;
 	char *name = NULL;
 
 	for (i = len - 1; i >= 0; i--) {
@@ -704,18 +698,20 @@ char *get_file_from_dir(const char *full_path)
 char *get_directory(const char *full_path)
 {
 	assert(full_path != NULL);
+    char *name = NULL;
 
-	int i, len = strlen(full_path);
-	char *name = NULL;
+    size_t len = strlen(full_path);
+	size_t i = len - 1;        
 
-	for (i = len - 1; i >= 0; i--) {
+    do {
 		if (full_path[i] == '/') {
 			name = (char *) malloc(sizeof(char) * (i + 1));
 			memset(name, '\0', sizeof(char) * (i + 1));
 			memcpy(name, full_path, i);
 			return name;
 		}
-	}
+        i--;
+    } while (i > 0);
 
 	return  "./";
 }
@@ -726,7 +722,7 @@ list_t read_file_list(char *filelist_name)
 	FILE *listfile = NULL;
 	char *tmp_name = malloc(sizeof(char) * MAX_STRING_LEN);
 	char *file_name = NULL;
-	int  len = 0;
+	size_t  len = 0;
 	list_t files_list = list_create();
 
 	listfile = fopen(filelist_name, "r");
@@ -756,7 +752,7 @@ list_t read_file_list(char *filelist_name)
  * Verifica se o identificador "name" esta na lista
  * Retorna 1 se estive e 0 se nao estiver
  */
-int is_in_the_list(list_t list, char *name)
+size_t is_in_the_list(list_t list, char *name)
 {
 	assert(list != NULL);
 
@@ -854,7 +850,7 @@ list_t read_directory(const char *path, list_t filters)
 	return list;
 }
 
-hash_table_t hash_table_create()
+hash_table_t hash_table_create(void)
 {
 	hash_table_t hash_table = NULL;
 
@@ -869,11 +865,12 @@ hash_table_t hash_table_create()
 }
 
 
-static unsigned int __hash_value(hash_table_t hash_table, const char* id)
+static size_t __hash_value(hash_table_t hash_table, const char* id)
 {
 	assert(hash_table != NULL);
 
-	unsigned int h, i = 0, len = strlen(id);
+	size_t h, i = 0;
+    size_t len = strlen(id);
 
 	for (h=0, i=0; i<len; ++i)
 		h = (h<<4)^(h>>28)^id[i];
@@ -895,7 +892,7 @@ void* hash_table_add(hash_table_t hash_table, char *id, void *data)
 	assert(id != NULL);
 
 
-	unsigned int pos = __hash_value(hash_table, id);
+	size_t pos = __hash_value(hash_table, id);
 
 	// Se a celula na tabelas estiver vazia, adiciona na tebela e adiciona a chave
 	if (hash_table->elems[pos] == NULL) {
@@ -951,7 +948,7 @@ void* hash_table_remove_by_id(hash_table_t hash_table, const char *id)
 	assert(hash_table != NULL);
 	assert(id != NULL);
 
-	unsigned int pos = __hash_value(hash_table, id);
+	size_t pos = __hash_value(hash_table, id);
 
 	list_t list = hash_table->elems[pos];
 	if ((list == NULL) || (list->size == 0)) {
@@ -1009,7 +1006,7 @@ void hash_table_print(hash_table_t hash_table, void (*print_func)(char *, void *
 
 void* hash_table_get(hash_table_t hash_table, char *id)
 {
-	int pos = __hash_value(hash_table, id);
+	size_t pos = __hash_value(hash_table, id);
 	list_t list = hash_table->elems[pos];
 	iterator_t iterator = NULL;
 	cell_t cell = NULL;
@@ -1109,7 +1106,7 @@ hash_table_t hash_table_destroy(hash_table_t *hash_table)
 	return *hash_table;
 }
 
-int hash_table_destroy_all(hash_table_t *hash_table, int (*destroy_item)(void *))
+size_t hash_table_destroy_all(hash_table_t *hash_table, size_t (*destroy_item)(void *))
 {
 	assert(*hash_table != NULL);
 	assert(destroy_item != NULL);
@@ -1160,7 +1157,7 @@ string_buffer_t string_buffer_add(string_buffer_t sb, char *fmt, ...)
 	vsprintf(tmp, fmt, args);
 	va_end(args);
 
-	int total_len = strlen(tmp) + 1;
+	size_t total_len = strlen(tmp) + 1;
 
 	string = (char *) malloc(sizeof(char) * total_len);
 	memcpy(string, tmp, total_len);
@@ -1188,7 +1185,7 @@ char *string_buffer_to_string(string_buffer_t sb)
 		cell = iterator->next(iterator);
 		text = cell->data;
 		string = strcat(string, text);
-                free(text);
+        free(text);
 	}
 
 	list_iterator_destroy(&iterator);
@@ -1197,6 +1194,14 @@ char *string_buffer_to_string(string_buffer_t sb)
 
 	return string;
 }
+
+int compare_by_id(const void* a, const void* b)
+{
+    cell_t *ca = (cell_t*) a;
+    cell_t *cb = (cell_t*) b;
+    return compare_strings((*cb)->id, (*ca)->id);
+}
+
 
 int compare_doubles (const double *da, const double *db)
 {
@@ -1208,7 +1213,7 @@ int compare_strings (const void *va, const void *vb)
 	assert(va != NULL);
 	assert(vb != NULL);
 
-	return strcmp(va, vb);
+	return strcmp(vb, va);
 }
 
 static inline void* __get_id(cell_t c)
@@ -1221,7 +1226,7 @@ static inline void* __get_data(cell_t c)
 	return c->data;
 }
 
-int destroy_string(void *s)
+size_t destroy_string(void *s)
 {
 	assert(s != NULL);
 	char **string = (char **)s;
