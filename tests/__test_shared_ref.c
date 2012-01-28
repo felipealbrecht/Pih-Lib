@@ -6,6 +6,7 @@
 #include "tests.h"
 
 typedef struct {
+    u_int64_t a;
 } X;
 
 int __test_shared_ref(void)
@@ -35,6 +36,11 @@ int __test_shared_ref(void)
     shared_ptr_rem_ref(&shr, t3);
 
     fprintf(stderr, "shr: %p\n", shr);
+    
+    free(t1);
+    free(t2);
+    free(t3);
+    free(s);
     
     assert(shr == NULL);
 

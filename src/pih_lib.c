@@ -924,8 +924,6 @@ void* hash_table_add(hash_table_t hash_table, char *id, void *data)
 						break;
 					}
 				}
-				assert(strcmp(keys_cell->id, list_cell->id) == 0);
-				assert(keys_cell->data == list_cell->data);
 
 				list_iterator_destroy(&keys_iterator);
 				list_iterator_destroy(&iterator);
@@ -1071,7 +1069,7 @@ hash_table_t hash_table_clone_all(hash_table_t hash_table, void* (*clone_item)(v
 	hash_table_clone = hash_table_create();
 
 	iterator_t iterator = hash_table_iterator(hash_table);
-	cell_t cell = cell;
+	cell_t cell;
 
 	while (iterator->has_next(iterator)) {
 		cell = iterator->next(iterator);
