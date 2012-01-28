@@ -18,7 +18,6 @@ int main (int argc, const char * argv[])
     __test_shared_ref();
     __test_sort_list_string();
     
-    
     fprintf(stdout, "All tests passed!\n");
     
     return 0;

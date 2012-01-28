@@ -85,8 +85,8 @@ void *list_get_by_pos(const list_t list, const size_t pos);
 void list_iterator_destroy(iterator_t *iterator);
 iterator_t list_iterator_reset(const iterator_t iterator);
 void* list_remove_by_id(list_t list, const char *id);
-void list_destroy(list_t *list);
-void list_destroy_all(list_t *list, size_t(*destroy_item)(void *));
+size_t list_destroy(list_t *list);
+size_t list_destroy_all(list_t *list, size_t(*destroy_item)(void *));
 
 void list_print(list_t list, void (*print)(char *, void *));
 list_t list_sort(const list_t list, int (*comparer)(const void *, const void *));
@@ -107,7 +107,7 @@ iterator_t hash_table_iterator(hash_table_t hash_table);
 void hash_table_print(hash_table_t hash_table, void (*print_func)(char *, void *));
 hash_table_t hash_table_clone(hash_table_t hash_table);
 hash_table_t hash_table_clone_all(hash_table_t hash_table, void* (*clone_item)(void *));
-hash_table_t hash_table_destroy(hash_table_t *hash_table);
+size_t hash_table_destroy(hash_table_t *hash_table);
 size_t hash_table_destroy_all(hash_table_t *hash_table, size_t (*destroy_item)(void *));
 
 list_t read_directory(const char *path, list_t filters);

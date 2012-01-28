@@ -47,6 +47,7 @@ static inline void* __get_id(cell_t c);
 static inline void* __get_data(cell_t c);
 static list_t __list_sort(const list_t list, int (*comparer)(const void *, const void *),  void* (*getter)(cell_t));
 
+static size_t destroy_dummy(void *data);
 
 static out_level_t actual_level = OUT_NORMAL;
 
@@ -261,12 +262,6 @@ list_t list_union(list_t list_a, list_t list_b)
 {
 	assert(list_a != NULL);
 
-//	fprintf(stderr, "juntando a:\n");
-//	list_print(list_a, print_dummy);
-//	fprintf(stderr, "juntando b:\n");
-//	list_print(list_b, print_dummy);
-//	fprintf(stderr, "-----------\n");
-
 	if (list_b == NULL) {
 		return list_a;
 	}
@@ -274,7 +269,6 @@ list_t list_union(list_t list_a, list_t list_b)
 	if (list_a == NULL) {
 		return list_clone(list_b);
 	}
-
 
 	cell_t prev;
 
@@ -306,28 +300,23 @@ list_t list_union(list_t list_a, list_t list_b)
 	return list_a;
 }
 
-void list_destroy(list_t *list)
+size_t list_destroy(list_t *list)
 {
-	if (*list == NULL) {
-		return;
-	}
-
-	cell_t cell = (*list)->first;
-	cell_t cell_delete = NULL;
-
-	while (cell != NULL) {
-		cell_delete = cell;
-		cell = cell->next;
-        free(cell_delete->id);
-		free(cell_delete);
-	}
-
-	free(*list);
-	*list = NULL;
+	return list_destroy_all(list, destroy_dummy);
 }
 
-void list_destroy_all(list_t *list, size_t (*destroy_item)(void *))
+static size_t destroy_dummy(void *data) {
+    return 0;
+}
+
+size_t list_destroy_all(list_t *list, size_t (*destroy_item)(void *))
 {
+    if (*list == NULL) {
+		return 0;
+	}
+    
+    size_t s = (*list)->size;
+    
 	cell_t cell = (*list)->first;
 	cell_t cell_delete = NULL;
 
@@ -339,11 +328,14 @@ void list_destroy_all(list_t *list, size_t (*destroy_item)(void *))
 		destroy_item(&data);
 
 		cell = cell->next;
-		free(cell_delete);
+        free(cell_delete->id);
+        free(cell_delete);        
 	}
 
 	free(*list);
 	list = NULL;
+    
+    return s;
 }
 
 
@@ -1081,29 +1073,9 @@ hash_table_t hash_table_clone_all(hash_table_t hash_table, void* (*clone_item)(v
 	return hash_table_clone;
 }
 
-hash_table_t hash_table_destroy(hash_table_t *hash_table)
+size_t hash_table_destroy(hash_table_t *hash_table)
 {
-	assert(*hash_table != NULL);
-	size_t i, total = 0;
-	list_t list;
-
-	for (i = 0; i < (*hash_table)->size; i++) {
-		list = (*hash_table)->elems[i];
-		total ++;
-		if (list !=NULL) {
-			list_destroy(&list);
-		}
-		free(list);
-	}
-	free((*hash_table)->elems);
-
-	list = (*hash_table)->keys;
-	list_destroy(&list);
-
-	free(*hash_table);
-	*hash_table = NULL;
-
-	return *hash_table;
+	return hash_table_destroy_all(hash_table, destroy_dummy);
 }
 
 size_t hash_table_destroy_all(hash_table_t *hash_table, size_t (*destroy_item)(void *))
